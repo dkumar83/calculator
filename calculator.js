@@ -107,7 +107,8 @@ const inputArray = {
     previous: "",
     xDot: 0,
     yDot: 0,
-    solution: ""
+    solution: "",
+    dotTotal: 0
 };
 
 const display = document.querySelector(".display");
@@ -132,6 +133,7 @@ function clear(answerText = "0", operator = "", x = "") {
     inputArray.xDot = 0;
     inputArray.yDot = 0;
     inputArray.solution = "";
+    inputArray.dotTotal = 0;
     console.clear();
 }
 
@@ -220,8 +222,11 @@ function populateInputArray(item, bool, equals) {
                 console.log(`Do ${inputArray.x} ${inputArray.operator} ${inputArray.y}`);
                 populateInputArray("", false, true);
             }
-
+            // reset counters to zero when chaining operators without pressing equals
             inputArray.y = "";
+            inputArray.dotTotal = 0;
+            inputArray.xDot = 0;
+            inputArray.yDot = 0;
             inputArray.operator = item;
 
         }
@@ -285,10 +290,16 @@ operatorArray.forEach(element => {
                 e.preventDefault();
                 clear();
             } else {
-                inputArray.solution = operate(e.target.value, Math.floor(+inputArray.x)).toString();
-                displayAnswer.innerHTML = inputArray.solution;
+                const bangFib = inputArray.solution = operate(e.target.value, Math.floor(+inputArray.x)).toString();
                 
-                clear(inputArray.solution, e.target.value, Math.floor(inputArray.x));
+                // comment below
+                inputArray.x = bangFib;
+                // comment below
+                inputArray.operatorCount = 0;
+
+                displayAnswer.innerHTML = bangFib;
+                
+                //clear(inputArray.solution, e.target.value, Math.floor(inputArray.x));
             }
         }
 
@@ -305,16 +316,27 @@ decimalButton.value = ".";
 bottomRow.appendChild(decimalButton);
 
 decimalButton.addEventListener("click", (element) => {
-    if (inputArray.xDot === 0) {
-        inputArray.xDot++;
-        populateInputArray(".", true, false);
-        console.log("xDot: ", inputArray.xDot);
-    } else if (inputArray.xDot !== 0 && inputArray.yDot !== 0) {
-        element.preventDefault();
-    } else if (inputArray.yDot === 0) {
-        inputArray.yDot++;
-        populateInputArray(".", true, false);
-        console.log("yDot: ", inputArray.yDot);
+
+    if ((!inputArray.xDot || !inputArray.yDot) && inputArray.dotTotal < 2) {
+        // lhs
+        if (!inputArray.xDot && !inputArray.xCount) {
+            inputArray.xDot = true;
+            inputArray.dotTotal++;
+            populateInputArray(".", true, false);
+            console.log("1a", inputArray.dotTotal)
+        }
+        // rhs
+        else if (!inputArray.yDot && inputArray.xCount) {
+            inputArray.dotTotal = 2;
+            inputArray.yDot = true;
+            populateInputArray(".", true, false);
+            console.log("1b", inputArray.dotTotal);
+
+
+        }
+
+        // 2 + .2.
+
     }
 });
 
