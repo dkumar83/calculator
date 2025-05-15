@@ -45,6 +45,11 @@ function fibonacci(number) {
     }
 };
 
+function oneRepMax (weight, reps) {
+    //RM = w / (1.0278 - (0.0278 × r)) , where w = weight lifted , r = reps performed
+    return weight/ (1.0278 - (0.0278 * reps));
+}
+
 console.log(fibonacci(8));
 
 function operate(action, x, y) {
@@ -67,11 +72,17 @@ function operate(action, x, y) {
         case "f":
             return fibonacci(x);
             break;
+        case "o":
+            return oneRepMax(x,y);
+            break;
     }
 }
 
-const digits = "0123456789+-*/=.!f";
+const digits = "0123456789+-*/=.!fo";
 const digitsArray = digits.split("");
+
+const operatorSymbols = "+-*/!fo";
+const operatorArray = operatorSymbols.split("");
 
 const styleButtons = {
     "0": "zero",
@@ -91,7 +102,8 @@ const styleButtons = {
     "=": "equals",
     ".": "dot",
     "!": "factorial",
-    "f": "fibonacci"
+    "f": "fibonacci",
+    "o": "oneRepMax"
 };
 
 
@@ -268,9 +280,6 @@ for (i = 0, row = 2; i < 10; row++, i++) {
 }
 
 // Set up operator buttons
-const operatorSymbols = "+-*/!f";
-const operatorArray = operatorSymbols.split("");
-
 const operators = document.querySelector(".operators");
 
 operatorArray.forEach(element => {
@@ -305,6 +314,9 @@ operatorArray.forEach(element => {
 
     });
 });
+
+const flex = document.querySelector(".oneRepMax");
+flex.innerText = "💪";
 
 const bottomRow = document.querySelector(".row1");
 
