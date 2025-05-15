@@ -64,13 +64,13 @@ function operate(action, x, y) {
         case "!":
             return factorial(x);
             break;
-        case "g":
+        case "f":
             return fibonacci(x);
             break;
     }
 }
 
-const digits = "0123456789+-*/=.!g";
+const digits = "0123456789+-*/=.!f";
 const digitsArray = digits.split("");
 
 const styleButtons = {
@@ -91,7 +91,7 @@ const styleButtons = {
     "=": "equals",
     ".": "dot",
     "!": "factorial",
-    "g": "fibonacci"
+    "f": "fibonacci"
 };
 
 
@@ -132,7 +132,7 @@ function clear(answerText = "0", operator = "", x = "") {
     inputArray.xDot = 0;
     inputArray.yDot = 0;
     inputArray.solution = "";
-    //console.clear();
+    console.clear();
 }
 
 function truncate(number) {
@@ -263,7 +263,7 @@ for (i = 0, row = 2; i < 10; row++, i++) {
 }
 
 // Set up operator buttons
-const operatorSymbols = "+-*/!g";
+const operatorSymbols = "+-*/!f";
 const operatorArray = operatorSymbols.split("");
 
 const operators = document.querySelector(".operators");
@@ -280,7 +280,7 @@ operatorArray.forEach(element => {
         inputArray.equalsCount = 0;
         populateInputArray(e.target.value, false, false);
 
-        if ((e.target.value === "!" || e.target.value === "g")) {
+        if ((e.target.value === "!" || e.target.value === "f")) {
             if (inputArray.x === "") {
                 e.preventDefault();
                 clear();
@@ -350,9 +350,6 @@ clearButton.addEventListener("click", (e) => {
 });
 
 document.querySelector("body").addEventListener("keydown", (e) => {
-    if (e.key === "Shift") {
-        e.preventDefault();
-    }
     const ifValidKey = simulateClick(e.key);
     if (ifValidKey) {
         const buttonStyle = "." + styleButtons[simulateClick(e.key)];
@@ -379,8 +376,10 @@ document.querySelector("body").addEventListener("keyup", (e) => {
 
 
 function simulateClick(key) {
-    const filteredKey = key.toLowerCase().split("").filter((element) => digitsArray.includes(element)).join("");
-    return filteredKey;
+    const filteredKey = digitsArray.filter(element => element === key);
+    if (filteredKey.length) {
+        return filteredKey;
+    }
 }
 
 
